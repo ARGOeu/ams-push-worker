@@ -13,33 +13,38 @@ Inside the projects directory issue the following command:
 go build
 ```
 
+### About
+
+AMS Push worker is a handy cli utility that let's you simulate AMS push functionality by pulling messages from an actual AMS project/subscription and pushing them to an endpoint in your local development environment. User should first have access to an AMS project and configure a standar subscription in pull mode. Then the user can run ams-push-worker with the correct parameters and target that project/subscription for pulling messages in pre-configured intervals(ms). Ams-push-worker will try to consume new messages from AMS and push them to the user's local endpoint.
+This mode is usefull to test the AMS push capability in a local environment while working on implementing the receiving endpoint. Ams-push-worker can also be configured with an authorization header that the remote endpoint might expect for validating the push server. 
+
 ### How to run
 
 #### Arguments
 
-`--host:` AMS host and ams port
+`--ams-host:` AMS host and ams port
 
-`--token:` AMS token
+`--ams-token:` AMS access token
 
-`--sub:` AMS subscription
+`--ams-sub:` AMS subscription to be used
 
-`--project:` AMS project that the subscription belongs to
+`--ams-project:` AMS project that the subscription belongs to
 
-`--endpoint:` Remote endpoint that we expect to receive messages to
+`--remote-endpoint:` Remote endpoint that we expect to receive messages to
 
-`--poll:` How often should the worker poll ams for new messages
+`--pull-interval:` Interval in milliseconds between pulling the next message 
 
-`--auth:` Expected Authorization header value from the remote endpoint
+`--auth-header:` Expected Authorization header value from the remote endpoint
 
 #### Example
 
 ```
 ./ams-push-worker
- --host 127.0.0.1:8080
- --token b328c3861f061f87cbd34cf34f36ba2ae20883a5
- --sub demo-sub
- --project ps-demo-project
- --endpoint https://192.168.1.6:5000/receive_here
- --poll 2
- --auth tok3n
+ --ams-host $AMS_FQDN:$AMS_PORT
+ --ams-token $AMS_ACCESS_TOKEN
+--ams-project ps-demo-project
+ --ams-sub demo-sub
+ --remote-endpoint https://localhost:5000/receive_here
+ --pull-interval 1000
+ --auth-header s3cr3et
 ```
